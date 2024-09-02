@@ -1,0 +1,5 @@
+require 'spree_core'
+require 'spree_extension'
+require 'spree_product_videos/engine'
+require 'spree_product_videos/version'
+require 'spree_product_videos/configuration'
