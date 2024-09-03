@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.description = 'Add (optional) extension description here'
   s.required_ruby_version = '>= 3.0'
 
-  s.author    = 'You'
-  s.email     = 'you@example.com'
+  s.author    = 'truemark'
+  s.email     = 'sushil@truemark.com.np'
   s.homepage  = 'https://github.com/your-github-handle/spree_product_videos'
   s.license = 'BSD-3-Clause'
 

@@ -7,6 +7,7 @@ end
 
 spree_version = '>= 4.5'
 gem 'spree', spree_version
+gem 'spree_auth_devise', spree_version
 gem 'rails-controller-testing'
 
 gemspec
