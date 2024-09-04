@@ -3,6 +3,6 @@ module Spree
     ATTRIBUTES += %i[video_attributes]
     mattr_reader *ATTRIBUTES
 
-    @@video_attributes = [:tag_name, :product_id, :url, :file]
+    @@video_attributes = [:product_id, :url, :file, :tag_name, tag_names: []]
   end
 end

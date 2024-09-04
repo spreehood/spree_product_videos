@@ -4,6 +4,7 @@ module Spree
       module Storefront
         class VideosController < ::Spree::Api::V2::ResourceController
           include Spree::Api::V2::CollectionOptionsHelpers
+
           before_action :load_product, only: [:create, :index]
           before_action :load_video, only: [:add_tag, :remove_tag, :destroy]
           before_action :require_spree_current_user, only: [:add_tag, :remove_tag, :destroy, :create]
@@ -13,7 +14,7 @@ module Spree
 
             if params[:video][:file].present? && @video.save
               render_serialized_payload { serialize_resource(@video) }
-            else  
+            else
               render_error_payload(@video.errors)
             end
           end
@@ -27,33 +28,50 @@ module Spree
           end
 
           def add_tag
-            tag = Spree::Tag.find_or_create_by(name: params[:video][:tag_name], product: @video.product)
+            tag_names = params[:video][:tag_names] || []
+            errors = []
 
-            unless @video.tags.include?(tag)
-              @video.tags << tag
+            tag_names.each do |tag_name|
+              tag = Spree::Tag.find_or_create_by(name: tag_name, product: @video.product)
+              if tag.persisted?
+                unless @video.tags.include?(tag)
+                  @video.tags << tag
+                end
+              else
+                errors << "Failed to create or find tag: #{tag_name}"
+              end
             end
 
-            render_serialized_payload { serialize_resource(@video) }
+            if errors.empty?
+              render_serialized_payload { serialize_resource(@video) }
+            else
+              render_error_payload(errors.join(', '))
+            end
           end
 
           def remove_tag
-            tag = @video.tags.find_by(name: params[:video][:tag_name])
+            tag_names = params[:video][:tag_names] || [] # Expecting an array of tag names
+            errors = []
 
-            if tag && @video.tags.destroy(tag)
+            tag_names.each do |tag_name|
+              tag = @video.tags.find_by(name: tag_name)
+              if tag
+                unless @video.tags.destroy(tag)
+                  errors << "Failed to remove tag: #{tag_name}"
+                end
+              else
+                errors << "Tag not found: #{tag_name}"
+              end
+            end
+
+            if errors.empty?
               render_serialized_payload { serialize_resource(@video) }
             else
-              render_error_payload(@video.errors)
+              render_error_payload(errors.join(', '))
             end
           end
 
           def index
-            if params[:video][:tag_name].present?
-              tag = Spree::Tag.find_by(name: params[:video][:tag_name], product: @product)
-              @videos = tag ? tag.videos : []
-            else
-              @videos = @product.videos
-            end
-
             render_serialized_payload { serialize_resource(collection) }
           end
 
@@ -64,6 +82,7 @@ module Spree
           end
 
           def collection
+            @videos = Spree::ProductVideos::Find.new(scope: @product.videos, params: params).execute
             collection_paginator.new(@videos, params).call
           end
 
@@ -86,7 +105,6 @@ module Spree
           def collection_serializer
             Spree::V2::Storefront::VideoSerializer
           end
-
         end
       end
     end
