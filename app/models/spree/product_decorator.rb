@@ -2,7 +2,7 @@
 module Spree
   module ProductDecorator
     def self.prepended(base)
-      base.has_many :videos
+      base.has_many :videos, class_name: 'Spree::ProductVideo'
       base.has_many :tags, through: :videos
     end
 

@@ -1,8 +1,8 @@
 module Spree
-    class Video < ActiveRecord::Base
+    class ProductVideo < ActiveRecord::Base
         belongs_to :product, class_name: 'Spree::Product'
-        has_many :video_tags
-        has_many :tags, through: :video_tags
+        has_many :product_video_taggings, class_name: 'Spree::ProductVideoTagging'
+        has_many :tags, through: :product_video_taggings, source: :product_video_tag
         
         has_one_attached :file
 

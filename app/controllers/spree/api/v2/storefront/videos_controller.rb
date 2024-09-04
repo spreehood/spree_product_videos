@@ -32,7 +32,7 @@ module Spree
             errors = []
 
             tag_names.each do |tag_name|
-              tag = Spree::Tag.find_or_create_by(name: tag_name, product: @video.product)
+              tag = Spree::ProductVideoTag.find_or_create_by(name: tag_name, product: @video.product)
               if tag.persisted?
                 unless @video.tags.include?(tag)
                   @video.tags << tag
@@ -59,8 +59,6 @@ module Spree
                 unless @video.tags.destroy(tag)
                   errors << "Failed to remove tag: #{tag_name}"
                 end
-              else
-                errors << "Tag not found: #{tag_name}"
               end
             end
 
@@ -78,7 +76,7 @@ module Spree
           private
 
           def load_video
-            @video = Spree::Video.find(params[:id])
+            @video = Spree::ProductVideo.find(params[:id])
           end
 
           def collection

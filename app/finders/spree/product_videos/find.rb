@@ -21,7 +21,7 @@ module Spree
       def filter_by_tag_name
         return @scope unless tag_name?
 
-        tag = Spree::Tag.find_by(name: tag_name)
+        tag = Spree::ProductVideoTag.find_by(name: tag_name)
 
         if tag
           @scope.joins(:tags).where(tags: { id: tag.id })
