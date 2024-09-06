@@ -1,0 +1,13 @@
+<div data-hook="admin_product_video_form_fields">
+  <%= f.field_container :file do %>
+    <%= f.label :video %>
+    <%= f.file_field :file %>
+  <% end %>
+
+  <%= f.fields_for :tag_attributes do |tag_form| %>
+    <div class="form-group">
+      <%= tag_form.label :name, 'Tags' %>
+      <%= tag_form.text_area :name, class: 'form-control', placeholder: 'Enter tags separated by commas' %>
+    </div>
+  <% end %>
+</div>

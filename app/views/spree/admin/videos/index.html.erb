@@ -1,0 +1,68 @@
+<% content_for :page_actions do %>
+  <% product_actions.items.each do |action| %>
+    <% next unless action.available?(current_ability) %>
+    <%= button_link_to(
+      Spree.t(action.label_translation_key),
+      action.url(@product),
+      class: action.classes,
+      icon: action.icon_key,
+      id: action.id,
+      target: action.target,
+      data: action.data_attributes
+    ) %>
+  <% end if product_actions&.items %>
+
+  <%= button_link_to t(:new_video), new_admin_product_video_url(@product), { class: "btn-success", icon: 'add.svg', id: 'admin_new_question' } %>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/product_tabs', locals: { current: t('questions_videos') } %>
+
+<% if @collection.any? %>
+  <div class="table-responsive">
+    <table class="table" id="listing_product_questions" data-hook>
+      <thead>
+      <tr data-hook="admin_product_questions_index_headers">
+        <th>
+          <%= Spree::ProductVideo.model_name.human %>
+        </th>
+        <th>
+          <%= Spree.t(:tags) %>
+        </th>
+        <th data-hook="admin_product_questions_index_header_actions" class="actions"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @collection.each do |video| %>
+        <tr data-hook="admin_orders_index_rows" class="<%= cycle('odd', 'even') %>">
+          <td>
+            <video width="320" height="240" controls>
+              <source src="<%= video.url %>" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </td>
+
+          <td>
+            <% video.tags.each do |tag| %>
+              <span class="badge badge-primary"><%= tag.name %></span>
+            <% end %>
+          </td>
+
+          <td class="actions" data-hook="admin_product_questions_index_row_actions">
+            <%= link_to_edit video, no_text: true, class: 'edit' %>
+
+            <%= link_to_delete video, no_text: true %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+<% else %>
+  <div class="alert alert-info no-objects-found">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::ProductVideo)) %>,
+    <%= link_to Spree.t(:add_one), new_admin_product_video_url(@product) %>
+  </div>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/index_table_options', locals: { collection: @collection } %>
