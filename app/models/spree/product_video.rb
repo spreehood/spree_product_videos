@@ -8,6 +8,15 @@ module Spree
 
         validate :acceptable_video
         after_save :generate_video_url, if: :file_attached_and_url_changed?
+        after_save :create_or_find_tag_associations
+
+        accepts_nested_attributes_for :tags, allow_destroy: true
+
+        attr_accessor :tag_attributes
+
+        def tag_attributes=(attributes)
+            @tag_attributes = attributes
+        end
 
         private
 
@@ -35,6 +44,19 @@ module Spree
 
         def file_attached_and_url_changed?
             file.attached? && url != file.url
+        end
+
+        def create_or_find_tag_associations
+            return unless @tag_attributes.present?
+
+            self.product_video_taggings.destroy_all
+      
+            tag_names = @tag_attributes['name'].split(',').map(&:strip).reject(&:empty?)
+      
+            tag_names.each do |tag_name|
+              tag = Spree::ProductVideoTag.find_or_create_by(name: tag_name.downcase, product_id: self.product.id)
+              self.product_video_taggings.find_or_create_by(product_video_tag_id: tag.id)
+            end
         end
     end
 end

@@ -6,8 +6,8 @@ module Spree
           include Spree::Api::V2::CollectionOptionsHelpers
 
           before_action :load_product, only: [:create, :index]
-          before_action :load_video, only: [:add_tag, :remove_tag, :destroy]
-          before_action :require_spree_current_user, only: [:add_tag, :remove_tag, :destroy, :create]
+          before_action :load_video, only: [:destroy, :update]
+          before_action :require_spree_current_user, only: [:destroy, :create]
 
           def create
             @video = @product.videos.new(video_params)
@@ -19,53 +19,19 @@ module Spree
             end
           end
 
-          def destroy
-            if @video.destroy
+          def update
+            if @video.update(video_params)
               render_serialized_payload { serialize_resource(@video) }
             else
               render_error_payload(@video.errors)
             end
           end
 
-          def add_tag
-            tag_names = params[:video][:tag_names] || []
-            errors = []
-
-            tag_names.each do |tag_name|
-              tag = Spree::ProductVideoTag.find_or_create_by(name: tag_name, product: @video.product)
-              if tag.persisted?
-                unless @video.tags.include?(tag)
-                  @video.tags << tag
-                end
-              else
-                errors << "Failed to create or find tag: #{tag_name}"
-              end
-            end
-
-            if errors.empty?
+          def destroy
+            if @video.destroy
               render_serialized_payload { serialize_resource(@video) }
             else
-              render_error_payload(errors.join(', '))
-            end
-          end
-
-          def remove_tag
-            tag_names = params[:video][:tag_names] || [] # Expecting an array of tag names
-            errors = []
-
-            tag_names.each do |tag_name|
-              tag = @video.tags.find_by(name: tag_name)
-              if tag
-                unless @video.tags.destroy(tag)
-                  errors << "Failed to remove tag: #{tag_name}"
-                end
-              end
-            end
-
-            if errors.empty?
-              render_serialized_payload { serialize_resource(@video) }
-            else
-              render_error_payload(errors.join(', '))
+              render_error_payload(@video.errors)
             end
           end
 
