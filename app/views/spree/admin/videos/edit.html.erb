@@ -1,0 +1,13 @@
+<%= content_for :page_actions do %>
+    <%= button_link_to t(:back_to_videos_list), admin_product_videos_url(@product, @video), { icon: 'icon-arrow-left', id: 'admin_new_question' } %>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/product_tabs', locals: { current: t('questions_and_answers') } %>
+<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_video } %>
+
+<%= form_for @video, as: :video, url: admin_product_video_path(@product), method: :put, html: { multipart: true } do |f| %>
+  <fieldset class="no-border-top">
+    <%= render partial: 'form', locals: { f: f } %>
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  </fieldset>
+<% end %>
