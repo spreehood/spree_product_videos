@@ -57,11 +57,12 @@ module Spree
 
       self.product_video_taggings.destroy_all
 
-     
-      tag_names = @tag_attributes['name'].split(',').map(&:strip).reject(&:empty?)
+      tag_names = @tag_attributes['name'].each
 
       tag_names.each do |tag_name|
-        tag = Spree::ProductVideoTag.find_or_create_by(name: tag_name.downcase, product_id: self.product.id)
+        next if tag_name.empty?
+
+        tag = Spree::ProductVideoTag.find_or_create_by(name: tag_name.downcase)
         self.product_video_taggings.find_or_create_by(product_video_tag_id: tag.id)
       end
     end

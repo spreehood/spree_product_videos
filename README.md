@@ -40,7 +40,7 @@ Introduction goes here.
             "video": {
                 "file": <VIDEO FILE>, # This will be a file upload
                 "tag_attributes": {
-                    "name": "tag1, tag2, tag3"
+                    "name": [ "tag1", "tag2", tag3" ]
                 }
             }
         }

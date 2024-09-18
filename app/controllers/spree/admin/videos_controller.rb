@@ -13,13 +13,14 @@ module Spree
       def new
         @product = Spree::Product.friendly.find(params[:product_id])
         @video = @product.videos.new
+        @tags = Spree::ProductVideoTag.all
       end
 
       def edit
         @product = Spree::Product.friendly.find(params[:product_id])
         @video = @product.videos.find(params[:id])
-        
-        @video.tag_attributes = { name: @video.tags.pluck(:name).join(', ') }
+        @tags = Spree::ProductVideoTag.all
+        @video_tags = @video.tags.pluck(:name).to_a
       end
 
       private
