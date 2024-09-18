@@ -51,7 +51,7 @@ module Spree
           end
 
           def load_product
-            @product = Spree::Product.find(params[:product_id])
+            @product = Spree::Product.friendly.find(params[:product_id])
           end
 
           def video_params

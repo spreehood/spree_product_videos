@@ -5,3 +5,5 @@ en:
   hello: "Hello world"
   product_videos:
     videos: "Videos"
+    current_video: "Current Video"
+    video_not_supported: "Your browser does not support the video tag."
