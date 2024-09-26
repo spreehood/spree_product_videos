@@ -28,4 +28,6 @@ Gem::Specification.new do |s|
   # s.add_dependency 'spree_frontend', spree_version
   s.add_dependency 'spree_core', spree_version
   s.add_dependency 'spree_extension'
+  s.add_dependency 'activerecord-import'
+  s.add_development_dependency 'spree_dev_tools'
 end
