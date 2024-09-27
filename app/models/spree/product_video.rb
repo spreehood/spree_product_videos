@@ -9,7 +9,6 @@ module Spree
     has_one_attached :file
 
     validate :acceptable_video
-    after_save :generate_video_url, if: :file_attached_and_url_changed?
     after_save :create_or_find_tag_associations
 
     accepts_nested_attributes_for :tags, allow_destroy: true
@@ -35,16 +34,6 @@ module Spree
       ]
       unless acceptable_types.include?(file.content_type)
         errors.add(:file, "must be a MP4, MPEG, QuickTime, WebM, Ogg, or AV1 video")
-      end
-    end
-
-    def generate_video_url
-      if file.attached?
-        public_url = rails_blob_url(file, only_path: true)
-
-        if url != public_url
-          self.update_column(:url, public_url)
-        end
       end
     end
 
