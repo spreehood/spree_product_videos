@@ -6,7 +6,7 @@ module Spree
 
         attribute :url do |object|
           if object.file.attached?
-            Rails.application.routes.url_helpers.rails_blob_url(object.file, only_path: true)
+            Rails.application.routes.url_helpers.rails_blob_url(object.file.blob, only_path: true)
           else
             nil 
           end
