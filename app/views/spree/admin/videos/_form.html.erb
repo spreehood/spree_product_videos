@@ -6,9 +6,9 @@
 
         <video width="320" height="240" controls>
           <source src="<%= f.object.file.url %>" type="video/mp4">
-          <%= t('spree_videos.video_not_supported') %>
+          <%= t('product_videos.video_not_supported') %>
         </video>
-        <p><%= t('spree_videos.current_video') %></p>
+        <p><%= t('product_videos.current_video') %></p>
       </div>
     <% end %>
     <%= f.file_field :file %>

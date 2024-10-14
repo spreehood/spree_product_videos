@@ -36,8 +36,8 @@
         <tr data-hook="admin_orders_index_rows" class="<%= cycle('odd', 'even') %>">
           <td>
             <video width="320" height="240" controls>
-              <source src="<%= video.url %>" type="video/mp4">
-              <%= t('spree_videos.video_not_supported') %>
+              <source src="<%= video.file.url %>" type="video/mp4">
+              <%= t('product_videos.video_not_supported') %>
             </video>
           </td>
 
